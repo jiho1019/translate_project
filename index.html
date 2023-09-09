@@ -7,7 +7,7 @@
 </head>
 <body>
   <div class="container">
-    <div class="my-3 ps-3 fs-3 fw-bold">언어 선택</div>
+    <div class="my-3 ps-3 fs-3 fw-bold">번역할 언어 선택</div>
       <div class="row m-1">
         <div class="col pe-0 p-1">
           <select class="form-select" id="dd" onchange="changeSelect1()">
@@ -34,12 +34,49 @@
       </div>
     </div>
     <div class="row p-1 m-1">
-      <button class="btn btn-secondary ps-10" style="width: 1300px; height: 45px; backgroundcolor:blue" onClick = "send_translate()">번역</button>
+      <button class="btn btn-secondary ps-10" style="width: 1300px; height: 45px; background:rgb(60, 60, 144)" onClick = "send_translate()">번역</button>
     </div>
   </div>  
 </body>
 
 <script>
+  function changeSelect1(){
+    var opt1 = document.getElementById('dd');
+    var opt2 = document.getElementById('ff');
+    if (opt1.value === 'ja'){
+      return;
+    }
+    else if (opt1.value === "ko"){
+      document.getElementById('trans_word').value = null;
+      document.getElementById('outprint').innerText = null;
+      window.setTimeout(function () {trans_word.focus(); }, 0); 
+      opt2.value = 'en'
+    }else{
+      document.getElementById('trans_word').value = null;
+      document.getElementById('outprint').innerText = null;
+      window.setTimeout(function () {trans_word.focus(); }, 0); 
+      opt2.value = 'ko'
+    }
+  };
+  function changeSelect2(){
+    var opt1 = document.getElementById('dd');
+    var opt2 = document.getElementById('ff');
+    if (opt1.value === 'ja'){
+      return;
+    }
+    else if (opt2.value === "ko"){
+      document.getElementById('trans_word').value = null;
+      document.getElementById('outprint').innerText = null;
+      window.setTimeout(function () {trans_word.focus(); }, 0); 
+      opt1.value = 'en'
+      
+    }else{
+      document.getElementById('trans_word').value = null;
+      document.getElementById('outprint').innerText = null;
+      window.setTimeout(function () {trans_word.focus(); }, 0); 
+      opt1.value = 'ko'
+    }
+  }
   function enterkey(){
     var opt1 = document.getElementById('dd');
     var opt2 = document.getElementById('ff');
@@ -49,17 +86,17 @@
 
       if(opt1.value === opt2.value) {
         alert("변경될 언어가 잘못 선택되었습니다.");
-        }
+        return;
       }
       if (trans_word.value === ""){
         alert("변역할 문장 혹은 단어를 입력해주세요")
         window.setTimeout(function () {trans_word.focus(); }, 0); 
+        return;
         
       }
-
-
       formData.append("text", trans_word.value);
     
+      formData.append("dest",opt2.value);
       if (opt1.value == 'ko') {
         formData.append("lang", 'ko');    
         let url = "http://127.0.0.1:5000/trans_ko";
@@ -87,15 +124,17 @@
 
     if(opt1.value === opt2.value) {
         alert("변경될 언어가 잘못 선택되었습니다.");
+        return ;
         }
-      }
     if (trans_word.value === ""){
         alert("변역할 문장 혹은 단어를 입력해주세요");
-        window.setTimeout(function () {trans_word.focus(); }, 0); 
+        window.setTimeout(function () {trans_word.focus(); }, 0);
+        return; 
       }
 
     formData.append("text", trans_word.value);
     
+    formData.append("dest",opt2.value);
     if (opt1.value == 'ko') {
         formData.append("lang", 'ko');    
         let url = "http://127.0.0.1:5000/trans_ko";
@@ -105,15 +144,13 @@
         formData.append("lang", 'en');
         let url = "http://127.0.0.1:5000/trans_en";
         send_msg(url, formData);
-	    
+    }
     else if(opt1.value == 'ja') {
         formData.append("lang", 'ja');
         let url = "http://127.0.0.1:5000/trans_ja";
         send_msg(url, formData);
-    
     }
   };
-
   function send_msg(url, data) {
       fetch(url, {
           headers: {
@@ -128,40 +165,9 @@
           let d = document. getElementById("outprint");
           d.innerText = data['text'];
       });
-  }
-  function changeSelect1(){
-    var opt1 = document.getElementById('dd');
-    var opt2 = document.getElementById('ff');
-    if (opt1.value === "ko"){
-      document.getElementById('trans_word').value = null;
-      document.getElementById('outprint').innerText = null;
-      window.setTimeout(function () {trans_word.focus(); }, 0); 
-      opt2.value = 'en'
-    }else{
-      document.getElementById('trans_word').value = null;
-      document.getElementById('outprint').innerText = null;
-      window.setTimeout(function () {trans_word.focus(); }, 0); 
-      opt2.value = 'ko'
     }
-  }
-  function changeSelect2(){
-    var opt1 = document.getElementById('dd');
-    var opt2 = document.getElementById('ff');
-    if (opt2.value === "ko"){
-      document.getElementById('trans_word').value = null;
-      document.getElementById('outprint').innerText = null;
-      window.setTimeout(function () {trans_word.focus(); }, 0); 
-      opt1.value = 'en'
-      
-    }else{
-      document.getElementById('trans_word').value = null;
-      document.getElementById('outprint').innerText = null;
-      window.setTimeout(function () {trans_word.focus(); }, 0); 
-      opt1.value = 'ko'
-    }
-  }
-</script>
 
+  </script>
 <style>
 html{
   align-items: center;
@@ -178,3 +184,5 @@ select {
 }
 </style>
 </html>
+
+
