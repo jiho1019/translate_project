@@ -5,78 +5,44 @@
 <link rel="stylesheet" href="./css/bootstrap.min.css">
 <title>Translater</title>
 </head>
-<body>
+<body style = "background-image:url('background.jpg'); display: flex; align-items: center; justify-content: center; height: 100vh;">
   <div class="container">
-    <div class="my-3 ps-3 fs-3 fw-bold">번역할 언어 선택</div>
+    <div class="m-3 ps-3 fs-3 fw-bold"></div>
       <div class="row m-1">
         <div class="col pe-0 p-1">
-          <select class="form-select" id="dd" onchange="changeSelect1()">
+          <select class="form-select border border-dark border border-2" id="dd" onchange="changeSelect1()">
             <option value="ko" selected>한국어</option>
             <option value="en">영어</option>
             <option value="ja">일본어</option>
+            <option value="fr">프랑스어</option>  
           </select>
         </div>
         <div class="col ps-0 ms-1 p-1">
-          <select class="form-select" id="ff" onchange="changeSelect2()">
+          <select class="form-select border border-dark border border-2" id="ff" onchange="changeSelect2()">
             <option value="ko">한국어</option>
             <option value="en" selected>영어</option>
-	    <option value="ja">일본어</option>
+	          <option value="ja">일본어</option>
+            <option value="fr">프랑스어</option>
           </select>
         </div>
       </div>
 
     <div class="row m-1">
       <div class="col pe-0 p-1">
-        <input class="form-control" style="height: 300px !important;" type="text" onkeydown="enterkey()" id="trans_word" placeholder="번역할 내용을 입력해주세요">
+        <input class="form-control border border-dark border border-2" style="height: 300px !important;" type="text" onkeydown="enterkey()" id="trans_word" placeholder="번역할 내용을 입력해주세요">
       </div>
       <div class="col ps-0 p-1 ms-1">
-        <div class="form-control" style="height: 300px !important" Name="output" id="outprint"></div>
+        <div class="form-control border border-dark border border-2" style="height: 300px !important" Name="output" id="outprint"></div>
       </div>
     </div>
     <div class="row p-1 m-1">
-      <button class="btn btn-secondary ps-10" style="width: 1300px; height: 45px; background:rgb(60, 60, 144)" onClick = "send_translate()">번역</button>
+      <button class="btn btn-secondary ps-10 rounded-pill border border-dark border border-2" style="width: 1300px; height: 45px; background:rgb(60, 60, 144)" onClick = send_translate()>번역</button>
     </div>
+    <div id  ="result"></div>
   </div>  
 </body>
 
 <script>
-  function changeSelect1(){
-    var opt1 = document.getElementById('dd');
-    var opt2 = document.getElementById('ff');
-    if (opt1.value === 'ja'){
-      return;
-    }
-    else if (opt1.value === "ko"){
-      document.getElementById('trans_word').value = null;
-      document.getElementById('outprint').innerText = null;
-      window.setTimeout(function () {trans_word.focus(); }, 0); 
-      opt2.value = 'en'
-    }else{
-      document.getElementById('trans_word').value = null;
-      document.getElementById('outprint').innerText = null;
-      window.setTimeout(function () {trans_word.focus(); }, 0); 
-      opt2.value = 'ko'
-    }
-  };
-  function changeSelect2(){
-    var opt1 = document.getElementById('dd');
-    var opt2 = document.getElementById('ff');
-    if (opt1.value === 'ja'){
-      return;
-    }
-    else if (opt2.value === "ko"){
-      document.getElementById('trans_word').value = null;
-      document.getElementById('outprint').innerText = null;
-      window.setTimeout(function () {trans_word.focus(); }, 0); 
-      opt1.value = 'en'
-      
-    }else{
-      document.getElementById('trans_word').value = null;
-      document.getElementById('outprint').innerText = null;
-      window.setTimeout(function () {trans_word.focus(); }, 0); 
-      opt1.value = 'ko'
-    }
-  }
   function enterkey(){
     var opt1 = document.getElementById('dd');
     var opt2 = document.getElementById('ff');
@@ -111,8 +77,12 @@
         formData.append("lang", 'ja');
         let url = "http://127.0.0.1:5000/trans_ja";
         send_msg(url, formData);
-    
       }
+      else if(opt1.value == 'fr') {
+        formData.append("lang", 'fr');
+        let url = "http://127.0.0.1:5000/trans_fr";
+        send_msg(url, formData);
+      } 
     };
   }
 
@@ -150,11 +120,16 @@
         let url = "http://127.0.0.1:5000/trans_ja";
         send_msg(url, formData);
     }
+    else if(opt1.value == 'fr') {
+        formData.append("lang", 'fr');
+        let url = "http://127.0.0.1:5000/trans_fr";
+        send_msg(url, formData);
+    }
   };
   function send_msg(url, data) {
       fetch(url, {
           headers: {
-	          Accept: "application / json",
+	          Accept: "application/json",
 	      },
           method: "POST",
           body: data,
@@ -164,9 +139,54 @@
           console.log(data['text']);
           let d = document. getElementById("outprint");
           d.innerText = data['text'];
+          addList(data['text']);
       });
+  }
+  function changeSelect1(){
+    var opt1 = document.getElementById('dd');
+    var opt2 = document.getElementById('ff');
+    if (opt1.value === 'ja'){
+      return;
     }
-
+    else if (opt1.value === "ko"){
+      document.getElementById('trans_word').value = null;
+      document.getElementById('outprint').innerText = null;
+      window.setTimeout(function () {trans_word.focus(); }, 0); 
+      opt2.value = 'en'
+    }else{
+      document.getElementById('trans_word').value = null;
+      document.getElementById('outprint').innerText = null;
+      window.setTimeout(function () {trans_word.focus(); }, 0); 
+      opt2.value = 'ko'
+    }
+  };
+  function changeSelect2(){
+    var opt1 = document.getElementById('dd');
+    var opt2 = document.getElementById('ff');
+    if (opt1.value === 'ja'){
+      return;
+    }
+    else if (opt2.value === "ko"){
+      document.getElementById('trans_word').value = null;
+      document.getElementById('outprint').innerText = null;
+      window.setTimeout(function () {trans_word.focus(); }, 0); 
+      opt1.value = 'en'
+      
+    }else{
+      document.getElementById('trans_word').value = null;
+      document.getElementById('outprint').innerText = null;
+      window.setTimeout(function () {trans_word.focus(); }, 0); 
+      opt1.value = 'ko'
+    }
+  }
+  function addList(resultValue)  {
+  const li = document.createElement("li");
+  const textNode = document.createTextNode(resultValue);
+  li.appendChild(textNode);
+  document
+    .getElementById('result')
+    .appendChild(li);
+}
   </script>
 <style>
 html{
