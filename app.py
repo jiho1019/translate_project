@@ -22,7 +22,9 @@ def trans__ko():
     dest = request.form['dest']
     lang = request.form['lang']
     
-    res = translator.translate(text,dest=dest)
+    res = translator.transl
+    
+    ate(text,dest=dest)
     return jsonify({'text': f"{res.text}", 'lang': lang})
 
 @app.route('/trans_en', methods=['GET', 'POST'])
@@ -42,6 +44,16 @@ def trans__ja():
     lang = request.form['lang']
     res = translator.translate(text,dest=dest)
     return jsonify({'text': f"{res.text}", 'lang': lang})
+
+@app.route('/trans_fr', methods=['GET', 'POST'])
+def trans__fr():
+    
+    text = request.form['text']
+    dest = request.form['dest']
+    lang = request.form['lang']
+    res = translator.translate(text,dest=dest)
+    return jsonify({'text': f"{res.text}", 'lang': lang})
     
 if __name__ == '__main__':
     app.run(debug=True)
+
